@@ -1,18 +1,7 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "./map.scss";
 import "leaflet/dist/leaflet.css";
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import Pin from "../pin/Pin";
-
-
-// Override default icons
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 
 function Map({ items }) {
