@@ -1,13 +1,15 @@
 import "./listPage.scss";
+import { useContext } from "react";
 import Filter from "../../components/filter/Filter";
 import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
 import { Await, useLoaderData } from "react-router-dom";
 import { Suspense } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 function ListPage() {
   const data = useLoaderData();
-
+  const {currentUser} = useContext(AuthContext)
   return (
     <div className="listPage">
       <div className="listContainer">

@@ -1,0 +1,38 @@
+1. PRISMA ORM USED INSTEAD OF MONGOOSE
+2. MONGODB NOSQL DATABASE USED
+3. In controller we have logic for every route.
+4. Starting from auth route. Methods in auth route include register, login and logout
+5. For register, we store user details in database but we make sure we store hashed password and for that we use bycrypt module.
+6. Then comes role of prisma. We store models in schema.prisma. Then we create prisma client
+7. For login route: Check if the user exists, check if password correct and then generate cookie token and send to the user.
+8. Cookie expires after one week
+9. For logout we just clearcookie
+10. So we send cookie to our api and inside api we decrypt and check our user information and process it further. 
+11. We created a seperate file apiRequest.js to make sure we need not to write the long url every time. withCredentials = true as we are using cookies all the time.
+12. Authentication done with the help of protected routes.
+13. Authentication, authorization and middleware.
+14. middleware veridyToken.js contains a function to verify token and once verified we attach userId with request. Which will further be used for authorization.
+15. We use cookies.token.id and comapre with user id before allowing them to update information.
+16. We want to store users session information as a context so that it is available to the whole app, so we use useContext hook for that. If there is any change in currentUser we want to make sure that we make changes in local storage, for that we use useEffect hook. 
+17. Cloudinary widget.
+18. 2.20sec imp about schema and prisma
+19. DOMpurify
+20. React router dom defer for loader. and filter implementation
+21. Socket.io used to create any realtime events. Here we first create our socket server. Polling - load on server (every seconds clients ask server for if there is any message in message app).
+22. First step in socket apps is http handshake between cliet and server with upgrade header to switch from normal http to socket. Difference between http and web socket is that http is stateless, unidirectional and half duplex. But web socket is statefull, bidrectional full duplex protocol. Socket refers to one client and io refers to whole servers or clients present in server/circuit. to() is used to send to a one client.
+
+
+Developed a full-stack web application for real estate listing and rental services, enabling users to browse, filter, and view detailed property information through an interactive map interface.
+Integrated JWT-based authentication and authorization for secure login and registration functionality.
+Built dynamic property pages with image sliders, descriptions, and detailed property information for better user experience.
+Enabled user profile management with CRUD operations, allowing users to create, update, and manage property posts.
+
+
+
+
+
+
+
+
+
+SEE FIRST OF ALL THE TECHNOLOGIES USED-  REACT JS, NODEJS MONGODB SOCKET.IO PRISMA, JWT, etc. FRONTEND HAS A LOGIN REGISTER, JWT IS Used for authentication and authorization, after logging in on frontend user can select buy or rent option and select city, their will be map displayed on right with markers on it, of that location and he or she will get list of real estates in that location and also filters and based on that filters list will vary, and when we select any real estate, we will get to know more descrtiption of it and more images, for that we have slider and also there is option for users to create post, update their porfile. There is chat feature that i have provided and for that i have used socket.io. For more references i will also attach system architecture with er diagram  

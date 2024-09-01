@@ -36,10 +36,31 @@
       font-weight: 600;
       color: #444;
       transition: all 0.4s ease;
+      display: flex;
+      justify-content: space-between;
 
-      &:hover {
+      .title-in:hover {
         color: #000;
         scale: 1.01;
+      }
+
+      .icons {
+        display: flex;
+        gap: 20px;
+
+        .icon {
+          border: 1px solid #999;
+          padding: 2px 5px;
+          border-radius: 5px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: lightgray;
+          }
+        }
       }
     }
 
@@ -77,25 +98,6 @@
           background-color: whitesmoke;
           padding: 5px;
           border-radius: 5px;
-        }
-      }
-
-      .icons {
-        display: flex;
-        gap: 20px;
-
-        .icon {
-          border: 1px solid #999;
-          padding: 2px 5px;
-          border-radius: 5px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          &:hover {
-            background-color: lightgray;
-          }
         }
       }
     }

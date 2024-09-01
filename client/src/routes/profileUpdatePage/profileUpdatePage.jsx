@@ -16,14 +16,15 @@ function ProfileUpdatePage() {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    const { username, email, password } = Object.fromEntries(formData);
+    const { username, email, password, mobile_number } = Object.fromEntries(formData);
 
     try {
       const res = await apiRequest.put(`/users/${currentUser.id}`, {
         username,
         email,
         password,
-        avatar:avatar[0]
+        mobile_number,
+        avatar:avatar[0],
       });
       updateUser(res.data);
       navigate("/profile");
@@ -60,6 +61,16 @@ function ProfileUpdatePage() {
             <label htmlFor="password">Password</label>
             <input id="password" name="password" type="password" />
           </div>
+          <div className="item">
+            <label htmlFor="phone">Phone Number</label>
+            <input
+            id="phone"
+            name="phone"
+            type="tel"
+            defaultValue={currentUser.mobile_number} // Assuming mob_number is the current user's phone number
+            pattern="[0-9]{10}" // Adjust pattern according to your phone number format
+            />
+        </div>
           <button>Update</button>
           {error && <span>error</span>}
         </form>
