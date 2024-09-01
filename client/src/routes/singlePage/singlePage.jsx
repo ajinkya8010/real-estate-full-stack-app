@@ -3,7 +3,7 @@ import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 
@@ -11,6 +11,7 @@ function SinglePage() {
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUser } = useContext(AuthContext);
+  const [ownerMobile, setOwnerMobile] = useState("");
   const navigate = useNavigate();
 
   const handleSave = async () => {
@@ -27,6 +28,40 @@ function SinglePage() {
     }
   };
 
+
+  useEffect(() => {
+    const fetchOwnerDetails = async () => {
+      try {
+        const res = await apiRequest.get(`/users/${post.userId}`);
+        const data = await res.data;
+        setOwnerMobile(data.mobile_number);
+      } catch (error) {
+        console.error("Error fetching owner details:", error);
+      }
+    };
+
+    fetchOwnerDetails();
+  }, [post.userId]);
+
+  const [nearbyPosts, setNearbyPosts] = useState([]);
+
+  const handleExploreNearby = async () => {
+    try {
+      const response = await apiRequest.get(`/posts/nearby`, {
+        params: {
+          latitude: post.latitude,
+          longitude: post.longitude,
+        },
+      });
+      setNearbyPosts(response.data);  
+    console.log('Response Data:', response.data);
+    navigate("/nearby", { state: { nearbyPosts: response.data } });
+    } catch (error) {
+      console.error("Error fetching nearby posts:", error);
+    }
+  };
+
+
   return (
     <div className="singlePage">
       <div className="details">
@@ -40,7 +75,8 @@ function SinglePage() {
                   <img src="/pin.png" alt="" />
                   <span>{post.address}</span>
                 </div>
-                <div className="price">$ {post.price}</div>
+                <div className="price">Rs {post.price}</div>
+                <button style={{backgroundColor: "white",}} onClick={handleExploreNearby}>Explore Nearby <img src="/pin.png" alt="" /> </button>
               </div>
               <div className="user">
                 <img src={post.user.avatar} alt="" />
@@ -56,6 +92,8 @@ function SinglePage() {
           </div>
         </div>
       </div>
+
+
       <div className="features">
         <div className="wrapper">
           <p className="title">General</p>
@@ -112,9 +150,7 @@ function SinglePage() {
               <div className="featureText">
                 <span>School</span>
                 <p>
-                  {post.postDetail.school > 999
-                    ? post.postDetail.school / 1000 + "km"
-                    : post.postDetail.school + "m"}{" "}
+                  {post.postDetail.school + "km"}{" "}
                   away
                 </p>
               </div>
@@ -123,14 +159,14 @@ function SinglePage() {
               <img src="/pet.png" alt="" />
               <div className="featureText">
                 <span>Bus Stop</span>
-                <p>{post.postDetail.bus}m away</p>
+                <p>{post.postDetail.bus}km away</p>
               </div>
             </div>
             <div className="feature">
               <img src="/fee.png" alt="" />
               <div className="featureText">
                 <span>Restaurant</span>
-                <p>{post.postDetail.restaurant}m away</p>
+                <p>{post.postDetail.restaurant}km away</p>
               </div>
             </div>
           </div>
@@ -139,9 +175,12 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="" />
-              Send a Message
+          <button
+              style={{
+                backgroundColor: "white",
+              }}
+            >
+            Contact: {ownerMobile}
             </button>
             <button
               onClick={handleSave}

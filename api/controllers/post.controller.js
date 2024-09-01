@@ -1,5 +1,31 @@
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+import { haversineDistance } from "../lib/haversine.js";
+
+export const getNearbyPosts = async (req, res) => {
+  const { latitude, longitude } = req.query;
+
+  const earthRadius = 6371; // Earth radius in KM
+  const maxDistance = 2; // 2 KM
+
+  try {
+    const posts = await prisma.post.findMany();
+
+    const nearbyPosts = posts.filter((post) => {
+      const distance = haversineDistance(
+        { lat: latitude, lon: longitude },
+        { lat: post.latitude, lon: post.longitude }
+      );
+      return (distance <= maxDistance && distance>0);
+    });
+
+    res.status(200).json(nearbyPosts);
+  } catch (error) {
+    console.error("Error fetching nearby posts:", error);
+    res.status(500).json({ message: "Failed to get nearby posts!" });
+  }
+};
+
 
 export const getPosts = async (req, res) => {
   const query = req.query;
@@ -27,6 +53,47 @@ export const getPosts = async (req, res) => {
   }
 };
 
+// export const getPost = async (req, res) => {
+//   const id = req.params.id;
+//   try {
+//     const post = await prisma.post.findUnique({
+//       where: { id },
+//       include: {
+//         postDetail: true,
+//         user: {
+//           select: {
+//             username: true,
+//             avatar: true,
+//           },
+//         },
+//       },
+//     });
+
+//     const token = req.cookies?.token;
+
+//     if (token) {
+//       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+//         if (!err) {
+//           const saved = await prisma.savedPost.findUnique({
+//             where: {
+//               userId_postId: {
+//                 postId: id,
+//                 userId: payload.id,
+//               },
+//             },
+//           });
+//           res.status(200).json({ ...post, isSaved: saved ? true : false });
+//         }
+//       });
+//     }
+//     res.status(200).json({ ...post, isSaved: false });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Failed to get post" });
+//   }
+// };
+
+
 export const getPost = async (req, res) => {
   const id = req.params.id;
   try {
@@ -47,25 +114,29 @@ export const getPost = async (req, res) => {
 
     if (token) {
       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
-        if (!err) {
-          const saved = await prisma.savedPost.findUnique({
-            where: {
-              userId_postId: {
-                postId: id,
-                userId: payload.id,
-              },
-            },
-          });
-          res.status(200).json({ ...post, isSaved: saved ? true : false });
+        if (err) {
+          return res.status(200).json({ ...post, isSaved: false });
         }
+        const saved = await prisma.savedPost.findUnique({
+          where: {
+            userId_postId: {
+              postId: id,
+              userId: payload.id,
+            },
+          },
+        });
+        return res.status(200).json({ ...post, isSaved: saved ? true : false });
       });
+    } else {
+      return res.status(200).json({ ...post, isSaved: false });
     }
-    res.status(200).json({ ...post, isSaved: false });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to get post" });
+    return res.status(500).json({ message: "Failed to get post" });
   }
 };
+
+
 
 export const addPost = async (req, res) => {
   const body = req.body;
@@ -110,10 +181,19 @@ export const deletePost = async (req, res) => {
       return res.status(403).json({ message: "Not Authorized!" });
     }
 
+    await prisma.postDetail.deleteMany({
+      where: { postId:id },
+    });
+
+    // Delete the SavedPost records associated with the post
+    await prisma.savedPost.deleteMany({
+      where: { postId:id },
+    });
+
+    // Finally, delete the Post record itself
     await prisma.post.delete({
       where: { id },
     });
-
     res.status(200).json({ message: "Post deleted" });
   } catch (err) {
     console.log(err);

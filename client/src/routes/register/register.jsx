@@ -19,12 +19,13 @@ function Register() {
     const username = formData.get("username");
     const email = formData.get("email");
     const password = formData.get("password");
-
+    const mobile_number = formData.get("phone");
     try {
       const res = await apiRequest.post("/auth/register", {
         username,
         email,
         password,
+        mobile_number
       });
 
       navigate("/login");
@@ -42,6 +43,7 @@ function Register() {
           <input name="username" type="text" placeholder="Username" />
           <input name="email" type="text" placeholder="Email" />
           <input name="password" type="password" placeholder="Password" />
+          <input name="phone" type="tel" placeholder="Phone-number" pattern="[0-9]{10}" />
           <button disabled={isLoading}>Register</button>
           {error && <span>{error}</span>}
           <Link to="/login">Do you have an account?</Link>

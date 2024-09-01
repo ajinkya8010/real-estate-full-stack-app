@@ -145,7 +145,7 @@ function NewPostPage() {
               <input min={0} id="school" name="school" type="number" />
             </div>
             <div className="item">
-              <label htmlFor="bus">bus</label>
+              <label htmlFor="bus">Bus</label>
               <input min={0} id="bus" name="bus" type="number" />
             </div>
             <div className="item">

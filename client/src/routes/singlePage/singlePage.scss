@@ -60,6 +60,21 @@
                 height: 16px;
               }
             }
+            button {
+              padding: 10px;
+              display: flex;
+              justify-content: space-evenly;
+              background-color: white;
+              border: 1px solid #fece51;
+              border-radius: 5px;
+              cursor: pointer;
+              
+    
+              img {
+                width: 16px;
+                height: 16px;
+              }
+            }
             .price {
               padding: 5px;
               background-color: rgba(254, 205, 81, 0.438);
