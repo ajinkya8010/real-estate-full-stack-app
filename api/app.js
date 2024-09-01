@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8800
 const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
-app.use(cors({ origin: clientUrl, credentials: true }));
+app.use(cors({ origin:  clientUrl, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
