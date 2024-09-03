@@ -43,7 +43,6 @@ function SinglePage() {
     fetchOwnerDetails();
   }, [post.userId]);
 
-  const [nearbyPosts, setNearbyPosts] = useState([]);
 
   const handleExploreNearby = async () => {
     try {
@@ -51,6 +50,7 @@ function SinglePage() {
         params: {
           latitude: post.latitude,
           longitude: post.longitude,
+          type:post.type
         },
       });
       setNearbyPosts(response.data);  
