@@ -1,6 +1,7 @@
 import React from 'react'
 import List from '../../components/list/List'
 import { useLocation } from 'react-router-dom';
+import './nearby.scss';
 
 const Nearby = () => {
     const location = useLocation();
@@ -16,7 +17,7 @@ const Nearby = () => {
       }
     
       return (
-        <div>
+        <div className='nearbyContainer'>
           <List posts={nearbyPosts} />
         </div>
       );

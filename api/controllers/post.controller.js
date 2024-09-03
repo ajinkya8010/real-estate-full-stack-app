@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { haversineDistance } from "../lib/haversine.js";
 
 export const getNearbyPosts = async (req, res) => {
-  const { latitude, longitude } = req.query;
+  const { latitude, longitude,type } = req.query;
 
   const earthRadius = 6371; // Earth radius in KM
   const maxDistance = 2; // 2 KM
@@ -16,7 +16,8 @@ export const getNearbyPosts = async (req, res) => {
         { lat: latitude, lon: longitude },
         { lat: post.latitude, lon: post.longitude }
       );
-      return (distance <= maxDistance && distance>0);
+      return (distance <= maxDistance && distance>0 && post.type===type);
+      
     });
 
     res.status(200).json(nearbyPosts);
