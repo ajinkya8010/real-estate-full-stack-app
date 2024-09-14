@@ -113,6 +113,10 @@ export const getPost = async (req, res) => {
 
     const token = req.cookies?.token;
 
+    if (!token) {
+      return res.status(200).json({ ...post, isSaved: false });
+    }
+
     if (token) {
       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
         if (err) {
