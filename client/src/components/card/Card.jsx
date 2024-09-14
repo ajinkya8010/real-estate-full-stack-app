@@ -44,7 +44,7 @@ function Card({ item }) {
         <h2 className="title">
           <Link className="title-in" to={`/${item.id}`}>{item.title}</Link>
           <div className="icons">
-          {item.userId === currentUser.id && (
+          {currentUser && item.userId === currentUser.id && (
               <div className="icon">
                 <img onClick={handleClick} src="/delete.png" alt="" />
               </div>
