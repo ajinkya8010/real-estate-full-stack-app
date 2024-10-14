@@ -52,8 +52,7 @@ function SinglePage() {
           longitude: post.longitude,
           type:post.type
         },
-      });
-      setNearbyPosts(response.data);  
+      }); 
     console.log('Response Data:', response.data);
     navigate("/nearby", { state: { nearbyPosts: response.data } });
     } catch (error) {
