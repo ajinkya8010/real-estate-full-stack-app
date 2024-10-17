@@ -70,7 +70,12 @@ function Card({ item }) {
               <span>{item.bathroom} bathroom</span>
             </div>
           </div>
-           <span>Contact: {ownerMobile}</span> 
+           {/* <span>Contact: {ownerMobile}</span>  */}
+           {currentUser ? (
+              <span>Contact: {ownerMobile}</span> 
+            ) : (
+              <span>Contact: Login to contact</span> 
+            )} 
         </div>
       </div>
     </div>
