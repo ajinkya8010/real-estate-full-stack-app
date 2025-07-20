@@ -5,6 +5,8 @@ import "react-quill/dist/quill.snow.css";
 import apiRequest from "../../lib/apiRequest";
 import UploadWidget from "../../components/uploadWidget/UploadWidget";
 import { useNavigate } from "react-router-dom";
+import localforage from "localforage";
+import { checkOnlineStatus } from "../../lib/checkInternet";
 
 function NewPostPage() {
   const [value, setValue] = useState("");
@@ -18,36 +20,51 @@ function NewPostPage() {
     const formData = new FormData(e.target);
     const inputs = Object.fromEntries(formData);
 
+    const payload = {
+      postData: {
+        title: inputs.title,
+        price: parseInt(inputs.price),
+        address: inputs.address,
+        city: inputs.city,
+        bedroom: parseInt(inputs.bedroom),
+        bathroom: parseInt(inputs.bathroom),
+        type: inputs.type,
+        property: inputs.property,
+        latitude: inputs.latitude,
+        longitude: inputs.longitude,
+        images: images,
+      },
+      postDetail: {
+        desc: value,
+        utilities: inputs.utilities,
+        pet: inputs.pet,
+        income: inputs.income,
+        size: parseInt(inputs.size),
+        school: parseInt(inputs.school),
+        bus: parseInt(inputs.bus),
+        restaurant: parseInt(inputs.restaurant),
+      },
+    };
+
     try {
-      const res = await apiRequest.post("/posts", {
-        postData: {
-          title: inputs.title,
-          price: parseInt(inputs.price),
-          address: inputs.address,
-          city: inputs.city,
-          bedroom: parseInt(inputs.bedroom),
-          bathroom: parseInt(inputs.bathroom),
-          type: inputs.type,
-          property: inputs.property,
-          latitude: inputs.latitude,
-          longitude: inputs.longitude,
-          images: images,
-        },
-        postDetail: {
-          desc: value,
-          utilities: inputs.utilities,
-          pet: inputs.pet,
-          income: inputs.income,
-          size: parseInt(inputs.size),
-          school: parseInt(inputs.school),
-          bus: parseInt(inputs.bus),
-          restaurant: parseInt(inputs.restaurant),
-        },
-      });
-      navigate("/"+res.data.id)
+        const isOnline = await checkOnlineStatus();
+        console.log("Online status:", isOnline);
+        if (!isOnline) {
+        console.log("📴 You are offline — queuing the post...");
+        // User is offline — save to localForage
+        let queued = (await localforage.getItem("queuedPosts")) || [];
+        queued.push(payload);
+        await localforage.setItem("queuedPosts", queued);
+         console.log("📦 Payload saved to localForage:", payload);
+        alert("🚫 You're offline! Your post will be uploaded automatically when you're back online.");
+      } else {
+        // Online — send post to server as usual
+        const res = await apiRequest.post("/posts", payload);
+        navigate("/" + res.data.id);
+      }
     } catch (err) {
       console.log(err);
-      setError(error);
+      setError(err); // your `setError(error)` had undefined `error`
     }
   };
 
