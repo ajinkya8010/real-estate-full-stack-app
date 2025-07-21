@@ -45,9 +45,16 @@ function Card({ item }) {
           <Link className="title-in" to={`/${item.id}`}>{item.title}</Link>
           <div className="icons">
           {currentUser && item.userId === currentUser.id && (
-              <div className="icon">
-                <img onClick={handleClick} src="/delete.png" alt="" />
-              </div>
+               <>
+                <div className="icon">
+                  <img onClick={handleClick} src="/delete.png" alt="Delete" title="Delete Post" />
+                </div>
+                <div className="icon">
+                  <Link to={`/edit/${item.id}`}>
+                    <img src="/edit.png" alt="Edit" title="Edit Post" />
+                  </Link>
+                </div>
+              </>
             )}
             <div className="icon">
               <img src="/save.png" alt="" />

@@ -14,6 +14,7 @@ import Login from "./routes/login/login";
 import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
+import EditPostPage from "./routes/editPostPage/editPostPage";
 import { Layout, RequireAuth } from "./routes/layout/layout";
 import {
   listPageLoader,
@@ -42,6 +43,7 @@ function App() {
         { path: "/profile", element: <ProfilePage />, loader: profilePageLoader },
         { path: "/profile/update", element: <ProfileUpdatePage /> },
         { path: "/add", element: <NewPostPage /> },
+        { path: "/edit/:id", element: <EditPostPage /> },
       ],
     },
   ]);
