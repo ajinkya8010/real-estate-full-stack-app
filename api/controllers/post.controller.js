@@ -160,13 +160,46 @@ export const addPost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
+  const id = req.params.id;
+  const tokenUserId = req.userId;
+  const body = req.body;
+
   try {
-    res.status(200).json();
+    const existingPost = await prisma.post.findUnique({
+      where: { id },
+    });
+
+    if (!existingPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (existingPost.userId !== tokenUserId) {
+      return res.status(403).json({ message: "Not Authorized!" });
+    }
+
+    // Update post
+    const updatedPost = await prisma.post.update({
+      where: { id },
+      data: {
+        ...body.postData,
+        postDetail: {
+          update: {
+            ...body.postDetail,
+          },
+        },
+      },
+      include: {
+        postDetail: true,
+      },
+    });
+
+    res.status(200).json(updatedPost);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to update posts" });
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Failed to update post" });
   }
 };
+
 
 export const deletePost = async (req, res) => {
   const id = req.params.id;

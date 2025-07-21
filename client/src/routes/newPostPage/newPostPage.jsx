@@ -56,7 +56,9 @@ function NewPostPage() {
         queued.push(payload);
         await localforage.setItem("queuedPosts", queued);
          console.log("📦 Payload saved to localForage:", payload);
-        alert("🚫 You're offline! Your post will be uploaded automatically when you're back online.");
+        alert("🚫 You're offline! Your post will be uploaded automatically when you're back online. You can keep adding posts");
+         e.target.reset(); 
+         setValue("");   
       } else {
         // Online — send post to server as usual
         const res = await apiRequest.post("/posts", payload);
