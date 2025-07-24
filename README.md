@@ -129,64 +129,6 @@ The application will be running at:
 - **Frontend**: http://localhost:5173
 - **Backend**: http://localhost:8800
 
-## 📁 Project Structure
-
-```
-real-estate-full-stack-app/
-├── backend/
-│   ├── config/
-│   │   ├── database.js
-│   │   └── cloudinary.js
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── propertyController.js
-│   │   └── userController.js
-│   ├── middleware/
-│   │   ├── auth.js
-│   │   ├── upload.js
-│   │   └── errorHandler.js
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Property.js
-│   │   └── Favorite.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── properties.js
-│   │   └── users.js
-│   ├── utils/
-│   │   ├── sendEmail.js
-│   │   └── validateData.js
-│   ├── .env
-│   ├── server.js
-│   └── package.json
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   ├── auth/
-│   │   │   ├── property/
-│   │   │   └── map/
-│   │   ├── pages/
-│   │   │   ├── Home.js
-│   │   │   ├── Properties.js
-│   │   │   ├── PropertyDetail.js
-│   │   │   ├── Profile.js
-│   │   │   └── Dashboard.js
-│   │   ├── context/
-│   │   │   └── AuthContext.js
-│   │   ├── services/
-│   │   │   └── api.js
-│   │   ├── utils/
-│   │   ├── styles/
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── .env
-│   └── package.json
-├── README.md
-└── .gitignore
-```
-
 
 ## 📱 Features in Detail
 
@@ -223,6 +165,9 @@ real-estate-full-stack-app/
 - Add/Edit posts while offline
 - Local queuing with localforage + IndexedDB
 - Automatic background sync when online
+
+## Demo
+📽️ [Click to watch the offline post making demo video](./pwa.mp4)
 
 
 ## 👨‍💻 Author
