@@ -167,7 +167,8 @@ The application will be running at:
 - Automatic background sync when online
 
 ## Demo
-📽️ [Click to watch the offline post making demo video](./pwa.mp4)
+📽️ Click to watch the offline post making demo video
+https://drive.google.com/file/d/1sAgxVBTMH3wfATcSraTxw6iPb_GtyxMY/view?usp=sharing
 
 
 ## 👨‍💻 Author
