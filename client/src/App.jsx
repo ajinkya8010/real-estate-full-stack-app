@@ -49,39 +49,45 @@ function App() {
   ]);
 
   useEffect(() => {
-    const syncQueuedPosts = async () => {
-      if (!navigator.onLine) return;
+  const syncQueuedData = async () => {
+    if (!navigator.onLine) return;
 
-      const queued = (await localforage.getItem("queuedPosts")) || [];
+    // SYNC NEW POSTS
+    const queuedPosts = (await localforage.getItem("queuedPosts")) || [];
+    const failedPosts = [];
 
-      if (queued.length === 0) return;
-
-      const failed = [];
-
-      for (let payload of queued) {
-        try {
-          await apiRequest.post("/posts", payload);
-          toast.success(`📤 Synced: ${payload.postData.title || "Untitled Post"}`);
-        } catch (err) {
-          failed.push(payload);
-          toast.error(`❌ Failed to sync: ${payload.postData.title || "Untitled Post"}`);
-        }
+    for (let payload of queuedPosts) {
+      try {
+        await apiRequest.post("/posts", payload);
+        toast.success(`📤 Synced: ${payload.postData.title || "Untitled Post"}`);
+      } catch {
+        failedPosts.push(payload);
+        toast.error(`❌ Failed to sync: ${payload.postData.title || "Untitled Post"}`);
       }
+    }
+    await localforage.setItem("queuedPosts", failedPosts.length ? failedPosts : null);
 
-      if (failed.length === 0) {
-        await localforage.removeItem("queuedPosts");
-      } else {
-        await localforage.setItem("queuedPosts", failed);
+    // SYNC EDITED POSTS
+    const queuedUpdates = (await localforage.getItem("queuedUpdates")) || [];
+    const failedUpdates = [];
+
+    for (let update of queuedUpdates) {
+      try {
+        await apiRequest.put(`/posts/${update.id}`, update);
+        toast.success(`✏️ Synced update: ${update.postData.title || "Untitled Post"}`);
+      } catch {
+        failedUpdates.push(update);
+        toast.error(`❌ Failed to sync update: ${update.postData.title || "Untitled Post"}`);
       }
-    };
+    }
+    await localforage.setItem("queuedUpdates", failedUpdates.length ? failedUpdates : null);
+  };
 
-    // ✅ Run on load
-    syncQueuedPosts();
+  syncQueuedData();
+  window.addEventListener("online", syncQueuedData);
+  return () => window.removeEventListener("online", syncQueuedData);
+}, []);
 
-    // ✅ Run when internet comes back
-    window.addEventListener("online", syncQueuedPosts);
-    return () => window.removeEventListener("online", syncQueuedPosts);
-  }, []);
 
   return (
     <>
