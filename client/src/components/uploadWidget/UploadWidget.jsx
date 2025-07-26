@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { checkOnlineStatus } from "../../lib/checkInternet";
 
 // Create a context to manage the script loading state
 const CloudinaryScriptContext = createContext();
@@ -25,7 +26,12 @@ function UploadWidget({ uwConfig, setPublicId, setState }) {
     }
   }, [loaded]);
 
-  const initializeCloudinaryWidget = () => {
+  const initializeCloudinaryWidget = async () => {
+    const isOnline = await checkOnlineStatus();
+    if(!isOnline) {
+      alert("🚫 You're offline! Check you network connection to upload");
+      return;
+    }
     if (loaded) {
       var myWidget = window.cloudinary.createUploadWidget(
         uwConfig,
